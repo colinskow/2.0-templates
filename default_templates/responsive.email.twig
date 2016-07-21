@@ -408,7 +408,7 @@
                                                             {% set sub_token = subscription.sub_token_url|split('?sub_token=')[1] %}
                                                             <li style="fc-cart-item-option-{{ option.class }}">
                                                                 {{ subscription.description }}<br />
-                                                                <a href="https://vocaleze-cart.firebaseapp.com/{{ sub_token }}">Click here</a> to manage your subscription.
+                                                                <a href="https://vocaleze-cart.firebaseapp.com/#/update?sub_token={{ sub_token }}">Click here</a> to manage your subscription, add or remove products, change your billing or shipping information or cancel.
                                                             </li>
                                                         {% endfor %}
                                                         </ul>
