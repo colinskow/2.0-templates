@@ -405,9 +405,10 @@
                                                     <td style="margin: 0;padding: 0;font-family: Verdana, Helvetica, Arial, sans-serif;">
                                                         <ul style="padding-left:1em;">
                                                         {% for subscription in subscriptions %}
+                                                            {% set sub_token = subscription.sub_token_url|split('?sub_token=')[1] %}
                                                             <li style="fc-cart-item-option-{{ option.class }}">
                                                                 {{ subscription.description }}<br />
-                                                                {{ subscription.html_links|raw }}
+                                                                <a href="https://vocaleze-cart.firebaseapp.com/{{ sub_token }}">Click here</a> to manage your subscription.
                                                             </li>
                                                         {% endfor %}
                                                         </ul>
