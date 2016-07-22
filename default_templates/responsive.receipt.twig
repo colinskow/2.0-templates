@@ -42,6 +42,76 @@
 
     {% import "utils.inc.twig" as utils %}
     {% embed 'receipt.inc.twig' %}
+
+        {% block receipt_messaging_and_actions %}
+            <div id="fc-receipt__section--receipt_messaging_and_actions">
+                {% block messaging %}
+                    <div id="fc-messages" class="fc-receipt__section">
+                        {% if is_updateinfo %}
+                            <div class="fc-alert fc-alert--success">
+                                {{ config.lang.checkout_updateinfo_completed|raw }}
+                            </div>
+                        {% elseif is_subscription_cancel %}
+                            <div class="fc-alert fc-alert--success">
+                                {{ config.lang.checkout_subscription_cancel_completed|raw }}
+                            </div>
+                        {% else %}
+                            <div class="fc-alert fc-alert--success">
+                                {{ config.lang.receipt_message_order|raw }}
+                            </div>
+                        {% endif %}
+
+                        {% if payment_is_pending %}
+                            <div class="fc-alert fc-alert--info">
+                                {{ config.lang.checkout_payment_pending|raw }}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endblock messaging %}
+
+                <div id="fc-receipt__section--actions" class="fc-receipt__section">
+                    {% block downloadable_links %}
+                        {% if has_downloadables and is_subscription_cancel == false %}
+                            <div id="fc-receipt__section--downloadables" class="fc-receipt__section">
+                                <fieldset>
+                                    <legend>{{ config.lang.checkout_download_links|raw }}</legend>
+                                    <div class="fc-form-group fc-form-group--static fc-form-group--receipt--downloadables">
+                                        <label class="fc-form-label fc-container__grid--static-label--downloadables">{{ config.lang.checkout_download_links|raw }}</label>
+                                        <div class="fc-container__grid--static-input--downloadables">
+                                            <ul fc-list="fc-list fc-list--downloadables">
+                                                {% for item in downloadable_links %}
+                                                    <li class="fc-list--downloadables__item">
+                                                        {% if item.url %}<a href="{{ item.url }}">{% endif %}
+                                                            {{ item.name }}
+                                                            {% if item.url %}</a>{% endif %}
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        {% endif %}
+                    {% endblock downloadable_links %}
+
+                    <div id="fc-receipt__section--print-and-continue" class="fc-receipt__section">
+                        <ul class="fc-list fc-list--inline">
+                            <li class="fc-receipt-action fc-receipt-action--continue">
+                                <a class="fc-button" href="{{ continue_url }}">{{ config.lang.checkout_continue_to|raw }}{{ config.store_name }}</a>
+                            </li>
+                            <li class="fc-receipt-action fc-receipt-action--print">
+                                <a class="fc-button" href="#" onclick="window.print(); return false;">{{ config.lang.checkout_print_this_page|raw }}</a>
+                            </li>
+                            <li class="fc-receipt-action">
+                                <div class="friendbuy-cHx-hO3"></div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        {% endblock receipt_messaging_and_actions %}
+
     {% endembed %}
 
     <!--[if lt IE 9 ]>
