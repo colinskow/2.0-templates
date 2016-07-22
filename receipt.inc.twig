@@ -1,5 +1,30 @@
 {% block receipt %}
 
+<script>
+    window['friendbuy'] = window['friendbuy'] || [];
+    window['friendbuy'].push(['site', 'site-a388743a-vocaleze.com']);
+    window['friendbuy'].push(['track', 'customer',
+        {
+            id: '{{ customer_id_encoded }}', //INSERT CUSTOMER ID PARAMETER
+            email: '{{ customer_email }}', //INSERT CUSTOMER EMAIL PARAMETER
+            first_name: '{{ shipping_address.first_name }}', //INSERT CUSTOMER FIRST NAME PARAMETER
+            last_name: '{{ shipping_address.first_name }}' //INSERT CUSTOMER LAST NAME PARAMETER
+        }
+    ]);
+    window['friendbuy'].push(['track', 'order',
+        {
+            id: '{{ transaction_id }}', //INPUT ORDER ID
+            amount: '{{ multiship.total_item_price }}', //INPUT ORDER AMOUNT
+            //new_customer: false, //OPTIONAL, true if this is the customer's first purchase
+            email: '{{ customer_email }}' //INPUT EMAIL
+        }
+    ]);
+    window['friendbuy'].push(['widget', "cHx-hO3"]);
+    (function (f, r, n, d, b, y) {
+        b = f.createElement(r), y = f.getElementsByTagName(r)[0];b.async = 1;b.src = n;y.parentNode.insertBefore(b, y);
+    })(document, 'script', '//djnf6e5yyirys.cloudfront.net/js/friendbuy.min.js');
+</script>
+
 <div class="fc-container">
 <div id="fc-receipt-container" class="fc-receipt__main fc-receipt__row">
 
@@ -92,6 +117,9 @@
                     </li>
                     <li class="fc-receipt-action fc-receipt-action--print">
                         <a class="fc-button" href="#" onclick="window.print(); return false;">{{ config.lang.checkout_print_this_page|raw }}</a>
+                    </li>
+                    <li class="fc-receipt-action">
+                        <div class="friendbuy-cHx-hO3"></div>
                     </li>
                 </ul>
             </div>
