@@ -147,7 +147,7 @@
 
 {% set sub_token = subscription.sub_token_url|split('?sub_token=')[1] %}
 Click below to manage your subscription, add or remove products, change your billing or shipping information or cancel.
-https://vocaleze-cart.firebaseapp.com/#/update?sub_token={{ sub_token }}
+=> https://vocaleze-cart.firebaseapp.com/#/update?sub_token={{ sub_token }}&customer={{ customer_email }}
 {% if not loop.last %}
 
 ----------------------------------------
