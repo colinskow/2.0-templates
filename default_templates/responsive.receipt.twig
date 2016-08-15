@@ -448,6 +448,9 @@
 
     {% endembed %}
 
+    {% if first_receipt_display %}
+        <script language="javascript" src="http://special.affiliatelogincenter.com/pixel.track?CID=321871&TotalSales={{ total_item_price }}&MerchantReferenceID={{ order_id }}"></script>
+    {% endif %}
     <!--[if lt IE 9 ]>
         <script src="{{ config.cdn_static_path }}scripts/respond/respond.1.4.2.js" charset="utf-8"></script>
     <![endif]-->

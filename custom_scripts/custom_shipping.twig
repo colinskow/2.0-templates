@@ -1,0 +1,190 @@
+{% if (context == 'cart' or context == 'checkout') and item_count > 0 %}
+    <script type="text/javascript" charset="utf-8">
+        (function (FC, $) {
+            FC.customFlatRates = {};
+            FC.customFlatRates.shipping_results = [];
+
+            FC.customFlatRates.config = {
+                'autoSelect': true  /* Set to true if you'd like the top shipping option to be automatically selected for the user */
+            };
+
+            FC.customFlatRates.logic = function (address) {
+                /* BEGIN CUSTOM SHIPPING LOGIC */
+                var standardShipping = 5.95;
+                var freeShippingMin = 35;
+                var customRates;
+                switch(address.country) {
+                    case 'US':
+                        customRates = [
+                            [101, standardShipping, 'Standard', '4-5 Days'],
+                            [102, 17.50, 'Expedited', '2-3 Days'],
+                            [103, 27.70, 'Express', 'Overnight']
+                        ];
+                        if(FC.json.total_item_price >= freeShippingMin) {
+                            customRates.forEach(function(rate) {
+                                rate[1] -= standardShipping;
+                            })
+                        }
+                        break;
+                    case 'CA':
+                        customRates = [ [201, 27.50, 'USPS', 'International Priority'] ];
+                        break;
+                }
+                customRates.forEach(function(rate) {
+                    FC.customFlatRates.add(rate[0], rate[1], rate[2], rate[3]);
+                });
+                /* END CUSTOM SHIPPING LOGIC */
+            };
+
+            /* Flat Rate Shipping Modification Logic v2.0.8 */
+            FC.customFlatRates.add = function (a, b, c, d) {
+                FC.customFlatRates.shipping_results.push({method: c, price: b, service_id: a, service_name: d})
+            };
+            FC.customFlatRates.hide = function (a) {
+                a = FC.customFlatRates.filterShippingOptions(a);
+                for (var b = 0; b < a.length; b++)FC.customFlatRates.shipping_results[a[b]].hide = !0
+            };
+            FC.customFlatRates.show = function (a) {
+                a = FC.customFlatRates.filterShippingOptions(a);
+                for (var b = 0; b < a.length; b++)FC.customFlatRates.shipping_results[a[b]].hide = !1
+            };
+            FC.customFlatRates.remove = function (a) {
+                a = FC.customFlatRates.filterShippingOptions(a);
+                a = a.sort(function (a, b) {
+                    return b - a
+                });
+                for (var b = a.length - 1; 0 <= b; b--)FC.customFlatRates.shipping_results.splice(a[b], 1)
+            };
+            FC.customFlatRates.update = function (a, b, c, d) {
+                a = FC.customFlatRates.filterShippingOptions(a);
+                for (var e = 0; e < a.length; e++) {
+                    if ("number" === typeof b || "string" === typeof b && "" !== b) {
+                        var f = FC.customFlatRates.modifyPrice(FC.customFlatRates.shipping_results[a[e]].price, b);
+                        FC.customFlatRates.shipping_results[a[e]].price = f
+                    }
+                    "string" === typeof c && (FC.customFlatRates.shipping_results[a[e]].method = c);
+                    "string" === typeof d && (FC.customFlatRates.shipping_results[a[e]].service_name = d)
+                }
+            };
+            FC.customFlatRates.reset = function () {
+                FC.customFlatRates.shipping_results = [];
+                FC.customFlatRates.error_message = !1
+            };
+            FC.customFlatRates.error = function (a) {
+                FC.customFlatRates.error_message = a
+            };
+            FC.api.getShippingOptions = function (a) {
+                var b = {
+                    address_name: a.address_name,
+                    state: a.region,
+                    country: a.country,
+                    city: a.city,
+                    postal_code: a.postal_code
+                };
+                FC.customFlatRates.reset();
+                FC.customFlatRates.logic(b);
+                for (var b = !1, c = FC.customFlatRates.shipping_results.length - 1; 0 <= c; c--)FC.customFlatRates.shipping_results[c].hide ? FC.customFlatRates.shipping_results.splice(c, 1) : FC.customFlatRates.shipping_results[c].service_id == a.shipping_service_id && (b = !0);
+                b || (a.shipping_service_description = "", a.shipping_service_id =
+                        0, a.total_shipping = 0, a.total_future_shipping = 0);
+                FC.customFlatRates.shipping_results.sort(function (a, b) {
+                    return a.price - b.price
+                });
+                if (FC.customFlatRates.config.autoSelect && 0 == a.shipping_service_id || 1 == FC.customFlatRates.shipping_results.length) {
+                    if (FC.json.has_multiship)for (c = 0; c < FC.json.multiship_data.length; c++)FC.json.multiship_data[c].address_name == a.address_name && (FC.json.multiship_data[c].shipping_service_id = FC.customFlatRates.shipping_results[0].service_id, FC.json.multiship_data[c].shipping_service_description =
+                            FC.customFlatRates.shipping_results[0].method + " " + FC.customFlatRates.shipping_results[0].service_name); else FC.json.shipping_address.shipping_service_id = FC.customFlatRates.shipping_results[0].service_id, FC.json.shipping_address.shipping_service_description = FC.customFlatRates.shipping_results[0].method + " " + FC.customFlatRates.shipping_results[0].service_name;
+                    FC.json.show_shipping_tbd = !1
+                }
+                return $.Deferred(function (a) {
+                    setTimeout(function () {
+                        FC.customFlatRates.error_message ? a.reject(Error(FC.customFlatRates.error_message)) :
+                                a.resolve({ok: !0, data: {shipping_results: FC.customFlatRates.shipping_results}})
+                    }, 10)
+                })
+            };
+            FC.customFlatRates.filterShippingOptions = function (a) {
+                if ("number" == typeof a)for (var b = 0; b < FC.customFlatRates.shipping_results.length; b++) {
+                    if (FC.customFlatRates.shipping_results[b].service_id == a)return [b]
+                } else {
+                    if ("string" == typeof a) {
+                        for (var c = [], d = {}, b = 0; b < FC.customFlatRates.shipping_results.length; b++) {
+                            var e = FC.customFlatRates.shipping_results[b];
+                            d[b] = e.method + " " + e.service_name
+                        }
+                        if ("all" != a.toLowerCase()) {
+                            a = /(fedex|usps|ups)?\s?([\w\s]+)?/i.exec(a);
+                            if (void 0 == a || "" == a)return;
+                            for (b in d)void 0 != a[1] &&
+                            "" != a[1] && -1 == d[b].toLowerCase().indexOf(a[1].toLowerCase()) ? delete d[b] : void 0 != a[2] && "" != a[2] && -1 == d[b].toLowerCase().indexOf(a[2].toLowerCase()) && delete d[b]
+                        }
+                        for (b in d)c.push(parseInt(b));
+                        return c
+                    }
+                    if ("object" == typeof a) {
+                        c = [];
+                        for (b = 0; b < a.length; b++)for (d = 0; d < FC.customFlatRates.shipping_results.length; d++)FC.customFlatRates.shipping_results[d].service_id == a[b] && c.push(a[b]);
+                        return c
+                    }
+                }
+            };
+            FC.customFlatRates.modifyPrice = function (a, b) {
+                b = b.toString();
+                var c = /([\+\-\=\*\/])?(\d+(?:\.\d+)?)(\%)?/.exec(b);
+                a = parseFloat(a);
+                var d = parseFloat(c[2]);
+                void 0 != c[3] && "" != c[3] && (d = d / 100 * a);
+                switch (void 0 == c[1] && "" != c[1] ? "=" : c[1]) {
+                    case "+":
+                        a += d;
+                        break;
+                    case "-":
+                        a -= d;
+                        break;
+                    case "/":
+                        a /= d;
+                        break;
+                    case "*":
+                        a *= d;
+                        break;
+                    default:
+                        a = d
+                }
+                return 0 > a ? 0 : a
+            };
+            function requireShipping() {
+                var a = !1;
+                FC.customFlatRates.config.onLocationChange = !1;
+                if (FC.json.has_multiship)for (i = 0; i < FC.json.multiship_data.length; i++)FC.json.multiship_data[i].has_shippable_products && !FC.json.multiship_data[i].has_live_rate_shippable_products && (FC.json.multiship_data[i].has_live_rate_shippable_products = !0, FC.json.shipping_address.custom_flat_rates_applied = !0, 0 == FC.json.multiship_data[i].shipping_service_id && (FC.json.show_address_entry = !0, "cart" == FC.json.context && (FC.json.show_shipping_tbd = !0)));
+                FC.json.shipping_address.has_shippable_products && !FC.json.shipping_address.has_live_rate_shippable_products && (FC.json.shipping_address.has_live_rate_shippable_products = !0, FC.json.has_current_live_rate_shipping = !0, FC.json.has_current_flat_rate_shipping = !1, a = !0, 0 == FC.json.shipping_address.shipping_service_id && (FC.json.show_address_entry = !0, FC.json.show_shipping_tbd = !0));
+                a && (FC.Template(FC.json.context).clearOutput(), FC[FC.json.context].render());
+                $.each(FC.json.has_multiship ? FC.json.multiship_data :
+                        [FC.json.shipping_address], function (a, c) {
+                    (!FC.customFlatRates.config.onLocationChange && FC.util.addressHasLocationInfo(c) || FC.customFlatRates.config.onLocationChange) && c.has_live_rate_shippable_products && FC[FC.json.context].getShippingOptions({address: c})
+                })
+            }
+
+            function saveShippingId(a, b, c) {
+                FC.customFlatRates.shipping_service_ids = [];
+                $.each(FC.json.has_multiship ? FC.json.multiship_data : [FC.json.shipping_address], function (a, b) {
+                    FC.customFlatRates.shipping_service_ids[a] = b.shipping_service_id
+                })
+            }
+
+            function restoreShippingId(a, b, c) {
+                a = /ThisAction=(\w+)/;
+                if (void 0 !== c && c.hasOwnProperty("url")) {
+                    if (-1 != c.url.search(a))var d = c.url.match(a)[1]; else-1 < c.url.indexOf("/cart") && (d = "cart");
+                    -1 == $.inArray(d, ["SaveCartContactInfo", "GetAddressByPostalCode", "SaveShippingServiceInfo", "GetTaxes"]) && (FC.customFlatRates.hasOwnProperty("shipping_service_ids") && $.each(FC.json.has_multiship ? FC.json.multiship_data : [FC.json.shipping_address], function (a, b) {
+                        0 == b.shipping_service_id && (b.shipping_service_id = void 0 === FC.customFlatRates.shipping_service_ids[a] ?
+                                0 : FC.customFlatRates.shipping_service_ids[a])
+                    }), requireShipping())
+                }
+                FC.customFlatRates.shipping_service_ids = []
+            }
+
+            $(document).ajaxStart(saveShippingId);
+            $(document).ajaxComplete(restoreShippingId);
+            {% if cart_is_fullpage or context == 'checkout' %}FC.client.on("ready.done", requireShipping);
+            {% else %}requireShipping();{% endif %}
+        })(FC, jQuery);
+    </script>
+{% endif %}
