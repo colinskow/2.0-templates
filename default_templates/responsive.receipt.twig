@@ -11,7 +11,9 @@
     <link href="{{ config.css_file }}" rel="stylesheet" media="all">
 
     <!-- FC script insertion -->{{ fc_header_content|raw }}<!-- /FC script insertion -->
+
     <script>
+        // Friendbuy Widget
         window['friendbuy'] = window['friendbuy'] || [];
         window['friendbuy'].push(['site', 'site-a388743a-vocaleze.com']);
         window['friendbuy'].push(['track', 'customer',
@@ -22,19 +24,30 @@
                 last_name: '{{ shipping_address.last_name }}' //INSERT CUSTOMER LAST NAME PARAMETER
             }
         ]);
-        window['friendbuy'].push(['track', 'order',
-            {
-                id: '{{ transaction_id }}', //INPUT ORDER ID
-                amount: '{{ total_item_price }}', //INPUT ORDER AMOUNT
-                //new_customer: false, //OPTIONAL, true if this is the customer's first purchase
-                email: '{{ customer_email }}' //INPUT EMAIL
-            }
-        ]);
         window['friendbuy'].push(['widget', "cHx-hO3"]);
         (function (f, r, n, d, b, y) {
             b = f.createElement(r), y = f.getElementsByTagName(r)[0];b.async = 1;b.src = n;y.parentNode.insertBefore(b, y);
         })(document, 'script', '//djnf6e5yyirys.cloudfront.net/js/friendbuy.min.js');
     </script>
+
+    {#Affiliate Tracking Code Here#}
+    {% if first_receipt_display %}
+        {#<script language="javascript" src="https://special.affiliatelogincenter.com/pixel.track?CID=321871&TotalSales={{ total_item_price }}&MerchantReferenceID={{ order_id }}"></script>#}
+        <script language="javascript">
+            // Track Facebook Conversions
+            fbq('track', 'Purchase', {value: '{{ total_item_price }}', currency:'USD'});
+            // Track FriendBuy Referrals
+            window['friendbuy'].push(['track', 'order',
+                {
+                    id: '{{ transaction_id }}', //INPUT ORDER ID
+                    amount: '{{ total_item_price }}', //INPUT ORDER AMOUNT
+                    //new_customer: false, //OPTIONAL, true if this is the customer's first purchase
+                    email: '{{ customer_email }}' //INPUT EMAIL
+                }
+            ]);
+        </script>
+    {% endif %}
+
 </head>
 <body>
 <!-- has to be here because of chrome bug -->
@@ -448,9 +461,6 @@
 
     {% endembed %}
 
-    {% if first_receipt_display %}
-        <script language="javascript" src="http://special.affiliatelogincenter.com/pixel.track?CID=321871&TotalSales={{ total_item_price }}&MerchantReferenceID={{ order_id }}"></script>
-    {% endif %}
     <!--[if lt IE 9 ]>
         <script src="{{ config.cdn_static_path }}scripts/respond/respond.1.4.2.js" charset="utf-8"></script>
     <![endif]-->
