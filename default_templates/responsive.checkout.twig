@@ -82,6 +82,11 @@
     {% endembed %}
 
     <!-- FC footer script insertion -->{% include template_from_string(fc_footer_content) %}<!-- /FC footer scripts -->
+    <script type="text/javascript">
+        FC.client.on('render.done', function(params, next) {
+            jQuery('.fc-form-control--subscribe').attr('checked', 'checked');
+        });
+    </script>
     <!--[if lt IE 10 ]>
         <script src="//{{ config.store_domain }}/static/scripts/placeholder/placeholder_polyfill.jquery.js" charset="utf-8"></script>
     <![endif]-->
