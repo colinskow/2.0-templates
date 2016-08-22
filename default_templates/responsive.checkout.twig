@@ -83,7 +83,7 @@
 
     <!-- FC footer script insertion -->{% include template_from_string(fc_footer_content) %}<!-- /FC footer scripts -->
     <script type="text/javascript">
-        FC.client.on('render.done', function(params, next) {
+        FC.client.on('ready.done', function(params, next) {
             jQuery('.fc-form-control--subscribe').attr('checked', 'checked');
         });
     </script>
