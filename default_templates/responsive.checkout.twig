@@ -84,7 +84,7 @@
     <!-- FC footer script insertion -->{% include template_from_string(fc_footer_content) %}<!-- /FC footer scripts -->
     <script type="text/javascript">
         FC.client.on('ready.done', function(params, next) {
-            jQuery('.fc-form-control--subscribe').attr('checked', 'checked');
+            jQuery('.fc-form-control--subscribe').trigger("click");
         });
     </script>
     <!--[if lt IE 10 ]>
