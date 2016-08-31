@@ -32,7 +32,7 @@
 
     {#Affiliate Tracking Code Here#}
     {% if first_receipt_display %}
-        {#<script language="javascript" src="https://special.affiliatelogincenter.com/pixel.track?CID=321871&TotalSales={{ total_item_price }}&MerchantReferenceID={{ order_id }}"></script>#}
+        <script language="javascript" src="https://special.affiliatelogincenter.com/pixel.track?CID=321871&TotalSales={{ total_item_price }}&MerchantReferenceID={{ order_id }}"></script>
         <script language="javascript">
             // Track Facebook Conversions
             fbq('track', 'Purchase', {value: '{{ total_item_price }}', currency:'USD'});
