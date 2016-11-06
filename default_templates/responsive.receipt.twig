@@ -465,5 +465,19 @@
         <script src="{{ config.cdn_static_path }}scripts/respond/respond.1.4.2.js" charset="utf-8"></script>
     <![endif]-->
     <!-- FC footer script insertion -->{% include template_from_string(fc_footer_content) %}<!-- /FC footer scripts -->
+
+    {#Google Analytics Ecommerce Code Here#}
+    {% if first_receipt_display %}
+        <script language="javascript">
+            ga('require', 'ecommerce');
+            ga('ecommerce:addTransaction', {
+                'id': '{{ order_id }}',
+                'affiliation': 'Vocaleze.com',
+                'revenue': '{{ total_item_price }}'
+            });
+            ga('ecommerce:send');
+        </script>
+    {% endif %}
+
 </body>
 </html>
