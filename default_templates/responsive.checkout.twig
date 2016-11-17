@@ -37,36 +37,9 @@
         </style>
     <![endif]-->
 
-    <style>
-        .fc-section-counter {
-            background-color: #168039 !important;
-            border-color: #168039 !important;
-        }
-
-        .fc-button.fc-button--submit {
-            border-color: #EC6927 !important;
-            background: #EC6927 !important;
-            font-size: 18px !important;
-            box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.12),
-            0 1px 6px 0 rgba(0, 0, 0, 0.12) !important;
-        }
-
-        .fc-sidebar {
-            background-color: #E8F5E9 !important;
-        }
-
-        .fc-form-label--plastic-new {
-            background-color: #C8E6C9 !important;
-        }
-
-        .fc-cart__item__image > span {
-            background-color: #FFFFFF !important;
-            border: solid 2px #168039 !important;
-            box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.12),
-            0 1px 6px 0 rgba(0, 0, 0, 0.12);
-        }
-
-    </style>
+    <link rel="stylesheet" href="https://vocaleze.com/checkout_css/bootstrap-grid.css">
+    <link rel="stylesheet" href="https://vocaleze.com/checkout_css/checkout.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 
     <script language="JavaScript">
         fbq('track', 'InitiateCheckout');
@@ -77,8 +50,53 @@
 <!-- has to be here because of chrome bug -->
     {% include 'svg.inc.twig' %}
 
+    <div class="header-panel">
+        <div class="header-container">
+            <div class="col-sm-6 col-md-4 text-center">
+                <img src="https://vocaleze.com/landing_assets/vocal-eze-logo-tm.png" alt="vocal-eze-logo" class="logo-header">
+            </div>
+            <div class="col-sm-6 col-md-4 col-md-offset-4 hidden-xs text-center">
+                <div class="toll-free">
+                    <div class="tf-label">Call Us Toll Free
+                        <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                    </div>
+                    <div class="phone-number">
+                        <i class="fa fa-phone"></i> 888.226.2286
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="green-stripe"></div>
+
     {% import "utils.inc.twig" as utils %}
     {% embed 'checkout.inc.twig' %}
+        {% block sidebar %}
+            <div class="fc-sidebar fc-sidebar--checkout" role="complementary">
+
+                {% block logo %}
+                    {% if config.store_logo_url %}
+                        <img id="fc-logo" src="{{ config.cache_path }}{{ config.store_logo_url }}" class="fc-logo__image" alt="{{ store_name }}">
+                    {% else %}
+                        <h1 class="fc-logotype">{{ config.store_name }}</h1>
+                    {% endif %}
+                {% endblock logo %}
+
+                <div data-fc-container="cart">
+                    {% include 'cart.inc.twig' %}
+                </div>
+
+                <div class="row padding-sm">
+                    <div class="col-xs-6">
+                        <img class="center-block img-responsive seals" src="https://vocaleze.com/cart/cart_img/security_seal.png">
+                    </div>
+                    <div class="col-xs-6">
+                        <img class="center-block img-responsive seals" src="https://vocaleze.com/cart/cart_img/satisfaction_guarantee.png">
+                    </div>
+                </div>
+
+            </div><!-- .fc-sidebar.fc-sidebar--checkout -->
+        {% endblock sidebar %}
     {% endembed %}
 
     <!-- FC footer script insertion -->{% include template_from_string(fc_footer_content) %}<!-- /FC footer scripts -->
