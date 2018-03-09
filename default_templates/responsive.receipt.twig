@@ -477,6 +477,25 @@
             });
             ga('ecommerce:send');
         </script>
+
+        <!-- Google Code for Thank you page conversion tracker for StoreYa Conversion Page -->
+        <script type="text/javascript">
+            /* <![CDATA[ */
+            var google_conversion_id = 813522596;
+            var google_conversion_label = "bz8xCIyL1n4QpL31gwM";
+            var google_conversion_value = {{ total_item_price }};
+            var google_conversion_currency = "USD";
+            var google_remarketing_only = false;
+            /* ]]> */
+        </script>
+        <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+        </script>
+        <noscript>
+            <div style="display:inline;">
+                <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/813522596/?value={{ total_item_price }}&amp;currency_code=USD&amp;label=bz8xCIyL1n4QpL31gwM&amp;guid=ON&amp;script=0"/>
+            </div>
+        </noscript>
+
     {% endif %}
 
 </body>
