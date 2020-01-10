@@ -11,43 +11,6 @@
     <link href="{{ config.css_file }}" rel="stylesheet" media="all">
 
     <!-- FC script insertion -->{{ fc_header_content|raw }}<!-- /FC script insertion -->
-
-    <script>
-        // Friendbuy Widget
-        window['friendbuy'] = window['friendbuy'] || [];
-        window['friendbuy'].push(['site', 'site-a388743a-vocaleze.com']);
-        window['friendbuy'].push(['track', 'customer',
-            {
-                id: '{{ customer_email }}', //INSERT CUSTOMER ID PARAMETER
-                email: '{{ customer_email }}', //INSERT CUSTOMER EMAIL PARAMETER
-                first_name: '{{ shipping_address.first_name }}', //INSERT CUSTOMER FIRST NAME PARAMETER
-                last_name: '{{ shipping_address.last_name }}' //INSERT CUSTOMER LAST NAME PARAMETER
-            }
-        ]);
-        window['friendbuy'].push(['widget', "cHx-hO3"]);
-        (function (f, r, n, d, b, y) {
-            b = f.createElement(r), y = f.getElementsByTagName(r)[0];b.async = 1;b.src = n;y.parentNode.insertBefore(b, y);
-        })(document, 'script', '//djnf6e5yyirys.cloudfront.net/js/friendbuy.min.js');
-    </script>
-
-    {#Affiliate Tracking Code Here#}
-    {% if first_receipt_display %}
-        <script language="javascript" src="https://special.affiliatelogincenter.com/pixel.track?CID=321871&TotalSales={{ total_item_price }}&MerchantReferenceID={{ order_id }}"></script>
-        <script language="javascript">
-            // Track Facebook Conversions
-            fbq('track', 'Purchase', {value: '{{ total_item_price }}', currency:'USD'});
-            // Track FriendBuy Referrals
-            window['friendbuy'].push(['track', 'order',
-                {
-                    id: '{{ transaction_id }}', //INPUT ORDER ID
-                    amount: '{{ total_item_price }}', //INPUT ORDER AMOUNT
-                    //new_customer: false, //OPTIONAL, true if this is the customer's first purchase
-                    email: '{{ customer_email }}' //INPUT EMAIL
-                }
-            ]);
-        </script>
-    {% endif %}
-
 </head>
 <body>
 <!-- has to be here because of chrome bug -->
@@ -476,9 +439,20 @@
                 'revenue': '{{ total_item_price }}'
             });
             ga('ecommerce:send');
+            // Track Facebook Conversions
+            fbq('track', 'Purchase', {value: '{{ total_item_price }}', currency:'USD'});
         </script>
         {#Pinterest#}
         <script type="text/javascript"> !function(e){if(!window.pintrk){window.pintrk=function(){window.pintrk.queue.push(Array.prototype.slice.call(arguments))};var n=window.pintrk;n.queue=[],n.version="3.0";var t=document.createElement("script");t.async=!0,t.src=e;var r=document.getElementsByTagName("script")[0];r.parentNode.insertBefore(t,r)}}("https://s.pinimg.com/ct/core.js"); pintrk('load','2617466020020'); pintrk('page', { page_name: 'Vocaleze', page_category: 'Checkout' }); pintrk('track', 'checkout'); </script> <noscript> <img height="1" width="1" style="display:none;" alt="" src="https://ct.pinterest.com/v3/?tid=2617466020020&noscript=1" /> </noscript>
+
+        <div id="refcandy-lollipop"
+            data-id="lekjym1x6mmu6m0dnfg8umq0m"
+            data-fname="{{ shipping_address.first_name }}"
+            data-lname="{{ shipping_address.last_name }}"
+            data-email="{{ customer_email }}"
+            data-accepts-marketing="true">
+        </div>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.defer=true;js.src="//portal.referralcandy.com/assets/widgets/refcandy-lollipop.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","refcandy-lollipop-js");</script>
     {% endif %}
 
 </body>
