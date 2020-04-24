@@ -445,14 +445,15 @@
         {#Pinterest#}
         <script type="text/javascript"> !function(e){if(!window.pintrk){window.pintrk=function(){window.pintrk.queue.push(Array.prototype.slice.call(arguments))};var n=window.pintrk;n.queue=[],n.version="3.0";var t=document.createElement("script");t.async=!0,t.src=e;var r=document.getElementsByTagName("script")[0];r.parentNode.insertBefore(t,r)}}("https://s.pinimg.com/ct/core.js"); pintrk('load','2617466020020'); pintrk('page', { page_name: 'Vocaleze', page_category: 'Checkout' }); pintrk('track', 'checkout'); </script> <noscript> <img height="1" width="1" style="display:none;" alt="" src="https://ct.pinterest.com/v3/?tid=2617466020020&noscript=1" /> </noscript>
 
-        <div id="refcandy-lollipop"
-            data-id="lekjym1x6mmu6m0dnfg8umq0m"
-            data-fname="{{ shipping_address.first_name }}"
-            data-lname="{{ shipping_address.last_name }}"
-            data-email="{{ customer_email }}"
-            data-accepts-marketing="true">
-        </div>
-        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.defer=true;js.src="//portal.referralcandy.com/assets/widgets/refcandy-lollipop.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","refcandy-lollipop-js");</script>
+        <script type='text/javascript'>
+            !function(d,s) {
+            var rc = "//go.referralcandy.com/purchase/sne2m8x63pwrxba7n8a2d891i.js";
+            var js = d.createElement(s);
+            js.src = rc;
+            var fjs = d.getElementsByTagName(s)[0];
+            fjs.parentNode.insertBefore(js,fjs);
+            }(document,"script");
+        </script>
     {% endif %}
 
 </body>
